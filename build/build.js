@@ -1,6 +1,5 @@
 /* You need uglify
-// npm install -g uglify-js
-// npm link uglify-js
+// npm install node-minify
 // Run that into node and voila
 */
 var FILE_ENCODING = 'utf-8',
@@ -8,44 +7,79 @@ var FILE_ENCODING = 'utf-8',
 EOL = '\n';
 
 var _fs = require('fs');
+var compressor = require('node-minify');
+
+// Using Google Closure with jQuery 2.0
 var filesArray = require('../app/config')
 
 function concat(opts) {
 
 	var fileList = opts.src;
 	var distPath = opts.dest;
+
+	console.log('Concatenating '+ fileList.length +' Files');
+
 	var out = fileList.map(function(filePath){
 		return _fs.readFileSync(filePath, FILE_ENCODING);
 	});
 
 	_fs.writeFileSync(distPath, out.join(EOL), FILE_ENCODING);
-	console.log(' '+ distPath +' built.');
+	console.log('Concatenation complete: '+ distPath +'.');
 }
 
+// Concatenate templates
 concat({
 	src : filesArray.configs.templates.dev,
 	dest : 'dist/templates.html'
 });
+
+// Concatenate JS files
 concat({
 	src : filesArray.configs.app.dev,
 	dest : 'dist/appfiles.js'
 });
 
-function uglify(srcPath, distPath) {
-	 var
-		uglyfyJS = require('uglify-js'),
-		jsp = uglyfyJS.parser,
-		pro = uglyfyJS.uglify,
-		ast = jsp.parse( _fs.readFileSync(srcPath, FILE_ENCODING) );
+// Concatenate Stylesheets files
+concat({
+	src : filesArray.configs.style.dev,
+	dest : 'dist/styles.css'
+});
 
-	 ast = pro.ast_mangle(ast);
-	 ast = pro.ast_squeeze(ast);
+// Use node-minify & google closure to compress JS files
+function closure(srcPath, distPath){
 
-	 _fs.writeFileSync(distPath, pro.gen_code(ast), FILE_ENCODING);
-	 console.log(' '+ distPath +' built.');
+	console.log('Comprssing Scripts.');
+
+	new compressor.minify({
+	    type: 'gcc',
+	    language: 'ECMASCRIPT5',
+	    fileIn: srcPath,
+	    fileOut: distPath,
+	    callback: function(err){
+	        console.log('Oops: ');
+	        console.log(err);
+	    }
+	});
 }
 
-uglify('dist/appfiles.js', 'dist/appfiles.min.js');
+// Use node-minify & Sqwish to compress CSS files
+function sqwish(srcPath, distPath){
 
-console.log("and you're done");
+	console.log('Compressing Stylesheets.');
+
+	new compressor.minify({
+	    type: 'sqwish',
+	    fileIn: srcPath,
+	    fileOut: distPath,
+	    callback: function(err){
+	        console.log('Ouch: ');
+	        console.log(err);
+	    }
+	});
+}
+
+closure('dist/appfiles.js', 'dist/appfiles.min2.js');
+sqwish('dist/styles.css', 'dist/styles.min.css');
+
+console.log("Build complete.");
 process.exit(1);
