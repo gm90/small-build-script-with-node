@@ -1,10 +1,12 @@
-# Simple build script to minify and concacenate files using node.js
+# Simple build script to minify/compress and concacenate files using node.js
 
-A simple build script that is easy to integrate in your workflow. Delibately simple, this is a nice base that can sparks ideas or ready to be build on top for something more complex that fit your need. You can see the blog post about [this project here](http://www.position-absolute.com/?p=4177).
+A front end build script that is easy to integrate in your workflow. 
+
+Props to the original author (https://github.com/posabsolute). You can see his blog post about it here(http://www.position-absolute.com/?p=4177).
 
 ## Dependencies
 
-The build.js script required node.js and the uglifyJS module.
+The build.js script required node.js and the node-minify module.
 
 ## Concatenating files
 
@@ -15,14 +17,19 @@ First got to build/build.js, in this file you will see the function concat, just
 	dest : 'dist/concatenatedFile.js'
     });
 
-It's as simple as that, just tell the script what files wou want to concatenante, your not confines to javascript file, you could also concatenate templates files.
+It's as simple as that, just tell the script what files wou want to concatenante, your not confines to javascript/css files, you can also concatenate templates files.
 
-## Minify Javascript with UglifyJS
+## Minify Javascript with node-minify & Google Closure Compiler
 
-To use the minify script you will need to have uglifyJS installed in your app. Then much like concat, chose your already concatenate file and minify it.
+To use the minify script you will need to have node-minify installed in your app. Then much like concat, chose your already concatenate file and minify it.
 
-    uglify('dist/concatenatedFile.js', 'dist/concatenatedFile.min.js');
+    closure('dist/concatenatedFile.js', 'dist/concatenatedFile.min.js');
 
+## Compress CSS with node-minify & Sqwish
+
+To use the minify script you will need to have node-minify installed in your app. Then much like concat, chose your already concatenate file and minify it.
+
+    sqwish('dist/concatenatedStylesheet.css', 'dist/concatenatedStylesheet.min.css');
 
 ## Loading the script
 
@@ -30,11 +37,18 @@ go into the build folder and then Just do
 
    node build.js 
 
-then you should see 3 logs
+then you should see the following logs. Number of files will depend on how many are passed in from the config file.
 
-    dist/templates.html built.
-    dist/appfiles.js built.
-    dist/appfiles.min.js built.
+    Concatenating 2 Files
+    Concatenation complete: dist/templates.html.
+    Concatenating 4 Files
+    Concatenation complete: dist/appfiles.js.
+    Concatenating 2 Files
+    Concatenation complete: dist/styles.css.
+    Comprssing Scripts.
+    Compressing Stylesheets.
+    Build complete.
+
 
 and there you go your files has been created. You could also put that command into a post-commit hook for profit!
 
