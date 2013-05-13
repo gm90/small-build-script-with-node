@@ -10,30 +10,30 @@ The build.js script required node.js and the node-minify module.
 
 ## Concatenating files
 
-First got to build/build.js, in this file you will see the function concat, just below:
+First go to build/build.js. In this file you will see the function concat, as displayed below:
 
     concat({
-	src : ['file1.js', 'file2.js'],
-	dest : 'dist/concatenatedFile.js'
+    	src : ['file1.js', 'file2.js'],
+    	dest : 'dist/concatenatedFile.js'
     });
 
-It's as simple as that, just tell the script what files wou want to concatenante, your not confines to javascript/css files, you can also concatenate templates files.
+It's as simple as that, just tell the script what files you would like to concatenante, your are not just confined to javascript/css files, you can also concatenate templates files.
 
 ## Minify Javascript with node-minify & Google Closure Compiler
 
-To use the minify script you will need to have node-minify installed in your app. Then much like concat, chose your already concatenate file and minify it.
+To use the minify script you will need to have node-minify installed in your app. Then much like concat, choose your already concatenated file and minify it using the closure function, passing in the targetFile and destination path.
 
     closure('dist/concatenatedFile.js', 'dist/concatenatedFile.min.js');
 
 ## Compress CSS with node-minify & Sqwish
 
-To use the minify script you will need to have node-minify installed in your app. Then much like concat, chose your already concatenate file and minify it.
+To use the minify script you will need to have node-minify installed. As with concatenation, choose your already concatenated CSS file and minify it using the sqwish function.
 
     sqwish('dist/concatenatedStylesheet.css', 'dist/concatenatedStylesheet.min.css');
 
 ## Loading the script
 
-go into the build folder and then Just do 
+go into the build folder and then run:
 
    node build.js 
 
